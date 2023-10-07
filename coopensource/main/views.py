@@ -42,18 +42,32 @@ class LoginView(APIView):
             'id': user.id
         }
         return response
+
 class UserView(APIView):
     def get(self, request):
         token = request.COOKIES.get('jwt')
 
         if not token:
             raise AuthenticationFailed("Unauthenticated!")
+
         try:
-            payload = jwt.decode(token, 'secret', algorithm = 'HS256')
+            payload = jwt.decode(token, 'secret', algorithm='HS256')
         except:
             raise AuthenticationFailed("Unauthenticated!")
 
-        user = User.objects.get(payload['id'])
-        serializer = UserSerializer(user)
+        try:
+            user = User.objects.get(id=payload['id'])
+            serializer = UserSerializer(user)
+            return Response(serializer.data)
+        except User.DoesNotExist:
+            return Response({"error": "User not found"}, status=404)
 
-        return Response(token)
+class LogoutView(APIView):
+    def post(self, request):
+        response = Response()
+        response.delete_cookie('jwt')
+        response.data = {
+            'message': 'success'
+        }
+        return response
+        

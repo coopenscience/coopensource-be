@@ -13,25 +13,22 @@ class User(AbstractUser):
     REQUIRED_FIELDS = []
 
 class Project(models.Model):
-    project_name = models.CharField(max_length=255)
+    project_name = models.TextField()
     project_url_on_catalog = models.URLField()
     project_url_external = models.URLField()
     project_description = models.TextField()
-    keywords = models.CharField(max_length=500)
-    fields_of_science = models.CharField(max_length=255)
-    project_status = models.CharField(max_length=50, choices=[
-        ('active', 'Active'),
-        ('inactive', 'Inactive'),
-    ])
-    agency_sponsor = models.CharField(max_length=255)
-    agency_sponsor_other = models.CharField(max_length=255, blank=True)
-    geographic_scope = models.CharField(max_length=100)
-    participant_age = models.CharField(max_length=255)
-    project_goals = models.TextField(blank=True)
-    participation_tasks = models.CharField(max_length=500)
-    scistarter = models.BooleanField(default=True)
-    email = models.EmailField()
-    start_date = models.DateField()
+    keywords = models.TextField()
+    fields_of_science = models.TextField()
+    project_status = models.TextField()
+    agency_sponsor = models.TextField()
+    agency_sponsor_other = models.TextField()
+    geographic_scope = models.TextField()
+    participant_age = models.TextField()
+    project_goals = models.TextField()
+    participation_tasks = models.TextField()
+    scistarter = models.TextField()
+    email = models.TextField()
+    start_date = models.TextField()
 
     def __str__(self):
         return self.project_name

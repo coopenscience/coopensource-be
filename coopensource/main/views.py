@@ -1,10 +1,12 @@
 from django.shortcuts import render
 from rest_framework.views import APIView
+from rest_framework import viewsets
 from rest_framework.response import Response
 from rest_framework.exceptions import AuthenticationFailed
-from .serializers import UserSerializer
-from .models import User
+from .serializers import UserSerializer, ProjectSerializer
+from .models import User, Project
 import jwt, datetime
+import csv
 # Create your views here.
 
 class RegisterView(APIView):
@@ -87,3 +89,32 @@ class LogoutView(APIView):
         }
         return response
         
+class ProjectView(viewsets.ModelViewSet):
+    queryset = Project.objects.all()
+    serializer_class = ProjectSerializer
+
+class populatedb(APIView):
+    def get(self, request):
+        with open('main/result.csv', mode='r') as csv_file:
+            csv_reader = csv.DictReader(csv_file)
+            for row in csv_reader:
+                project = Project(
+                    project_name=row['project_name'], 
+                    project_url_on_catalog=row['project_url_on_catalog'], 
+                    project_url_external=row['project_url_external'], 
+                    project_description=row['project_description'], 
+                    keywords=row['keywords'], 
+                    fields_of_science=row['fields_of_science'], 
+                    project_status=row['project_status'], 
+                    agency_sponsor=row['agency_sponsor'], 
+                    agency_sponsor_other=row['agency_sponsor_other'], 
+                    geographic_scope=row['geographic_scope'], 
+                    participant_age=row['participant_age'], 
+                    project_goals=row['project_goals'], 
+                    participation_tasks=row['participation_tasks'], 
+                    scistarter=row['scistarter'], 
+                    email=row['email'], 
+                    start_date=row['start_date']
+                    )
+                project.save()
+

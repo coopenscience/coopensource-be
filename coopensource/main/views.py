@@ -61,6 +61,22 @@ class UserView(APIView):
             return Response(serializer.data)
         except User.DoesNotExist:
             return Response({"error": "User not found"}, status=404)
+        
+class UserExistsView(APIView):
+    def get(self, request, id):
+        try:
+            user = User.objects.get(id=id)
+            serializer = UserSerializer(user)
+            return Response(serializer.data)
+        except User.DoesNotExist:
+            new_user_data = {
+                'email': '',
+                'password': '',
+            }
+            new_user_serializer = UserSerializer(data=new_user_data)
+            if new_user_serializer.is_valid(raise_exception=True):
+                new_user = new_user_serializer.save()
+                return Response(new_user_serializer.data)
 
 class LogoutView(APIView):
     def post(self, request):

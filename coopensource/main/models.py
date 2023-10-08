@@ -14,6 +14,7 @@ class User(AbstractUser):
     REQUIRED_FIELDS = []
 
 class Project(models.Model):
+    project_id = models.CharField(1024, null=True, blank=True)
     project_name = models.TextField()
     project_url_on_catalog = models.URLField()
     project_url_external = models.URLField()
@@ -25,7 +26,7 @@ class Project(models.Model):
     agency_sponsor_other = models.TextField()
     geographic_scope = models.TextField()
     participant_age = models.TextField()
-    project_goals = models.TextField()
+    project_goals = models.CharField(null=True, blank=True)
     participation_tasks = models.TextField()
     scistarter = models.TextField()
     email = models.TextField()

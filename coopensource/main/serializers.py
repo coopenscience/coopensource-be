@@ -21,6 +21,7 @@ class ProjectSerializer(serializers.ModelSerializer):
     class Meta:
         model = Project
         fields = [
+            'project_id',
             'project_name', 
             'project_url_on_catalog', 
             'project_url_external', 

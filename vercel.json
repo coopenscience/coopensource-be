@@ -1,0 +1,17 @@
+{
+    "builds": [{
+        "src": "coopensource/wsgi.py",
+        "use": "@ardnt/vercel-python-wsgi",
+        "config": { "maxLambdaSize": "15mb" }
+    }],
+    "routes": [
+        { "src": "/register", "dest": "coopensource/wsgi.py" },
+        { "src": "/login", "dest": "coopensource/wsgi.py" },
+        { "src": "/user", "dest": "coopensource/wsgi.py" },
+        { "src": "/logout", "dest": "coopensource/wsgi.py" },
+        { "src": "/user/([^/]+)/exists", "dest": "coopensource/wsgi.py" },
+        { "src": "/api/(.*)", "dest": "coopensource/wsgi.py" },
+        { "src": "/admin/(.*)", "dest": "coopensource/wsgi.py" },
+        { "src": "/(.*)", "dest": "coopensource/wsgi.py" }
+    ]
+}

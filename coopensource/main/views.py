@@ -77,8 +77,9 @@ class UserExistsView(APIView):
             }
             new_user_serializer = UserSerializer(data=new_user_data)
             if new_user_serializer.is_valid(raise_exception=True):
-                new_user = new_user_serializer.save()
+                new_user_serializer.save()
                 return Response(new_user_serializer.data)
+
 
 class LogoutView(APIView):
     def post(self, request):
@@ -117,4 +118,25 @@ class populatedb(APIView):
                     start_date=row['start_date']
                     )
                 project.save()
+
+class CompleteUserView(APIView):
+    def post(self, request):
+        bio = request.POST.get('bio')
+        category = request.POST.get('category')
+        id = request.POST.get('id')
+        user = User.objects.filter(id=id)
+        if user.exists():
+            u = user.first()
+            u.bio = bio
+            u.category = category
+            u.save()
+
+        else:
+            u = User()
+            u.bio = bio
+            u.category = category
+            u.id = id
+            u.save()
+
+        return Response({"id": id, "category": category, "bio": bio})
 

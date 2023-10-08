@@ -2,7 +2,8 @@
 from django.contrib import admin
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
-from .views import RegisterView, LoginView, UserView, LogoutView, UserExistsView, ProjectView, populatedb
+from .views import RegisterView, LoginView, UserView, LogoutView, UserExistsView, ProjectView, populatedb, CompleteUserView
+
 
 router = DefaultRouter()
 router.register(r'projects', ProjectView)
@@ -14,4 +15,5 @@ urlpatterns = [
     path('logout', LogoutView.as_view()),
     path('user/<int:id>/exists', UserExistsView.as_view()),
     path('', include(router.urls)),
+    path('complete_user', CompleteUserView.as_view())
 ]

@@ -7,6 +7,7 @@ class User(AbstractUser):
     email = models.EmailField(blank=True, null=True, unique=True)
     password = models.CharField(max_length=128, blank=True, null=True)
     bio = models.CharField(max_length=2048, blank=True, null=True)
+    category = models.CharField(max_length=255, blank=True, null=True)
     username = None
 
     USERNAME_FIELD = 'email'

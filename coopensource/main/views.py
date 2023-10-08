@@ -5,6 +5,7 @@ from rest_framework.response import Response
 from rest_framework.exceptions import AuthenticationFailed
 from .serializers import UserSerializer, ProjectSerializer
 from .models import User, Project
+from rest_framework.permissions import IsAuthenticated
 import jwt, datetime
 import csv
 from sklearn.metrics.pairwise import cosine_similarity
@@ -58,6 +59,28 @@ class LoginView(APIView):
         }
         return response
 
+class CompleteUserView(APIView):
+    def post(self, request):
+        bio = request.POST.get('bio')
+        id = request.POST.get('id')
+        category = request.POST.get('category')
+
+        user = User.objects.filter(id=int(id))
+        if user.exists():
+            u = user.first()
+            u.bio = bio
+            u.category = category
+            u.id = id
+            u.save()
+            return Response({"bio": bio, "category": category, "id": id}, status=200)
+        else:
+            u = User()
+            u.bio = bio
+            u.category = category
+            u.id = id  
+            u.save()
+            return Response({"bio": bio, "category": category, "id": id}, status=201)
+
 class UserView(APIView):
     def get(self, request):
         token = request.COOKIES.get('jwt')
@@ -90,9 +113,30 @@ class UserExistsView(APIView):
             }
             new_user_serializer = UserSerializer(data=new_user_data)
             if new_user_serializer.is_valid(raise_exception=True):
-                new_user_serializer.save()
+                new_user = new_user_serializer.save()
                 return Response(new_user_serializer.data)
+            
 
+class CompleteUserView(APIView):
+    def post(self, request):
+        bio = request.POST.get('bio')
+        category = request.POST.get('category')
+        id = request.POST.get('id')
+        user = User.objects.filter(id=id)
+        if user.exists():
+            u = user.first()
+            u.bio = bio
+            u.category = category
+            u.save()
+
+        else:
+            u = User()
+            u.bio = bio
+            u.category = category
+            u.id = id
+            u.save()
+
+        return Response({"id": id, "category": category, "bio": bio})
 
 class LogoutView(APIView):
     def post(self, request):
